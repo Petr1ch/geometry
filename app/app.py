@@ -13,7 +13,7 @@ def init_db(app_settings: Settings) -> None:
     metadata.bind = engine
 
 
-def create_app(app_settings: Settings = settings):
+def create_app(app_settings: Settings = settings) -> FastAPI:
     init_db(app_settings)
     app = FastAPI(
         title='Geometry Service',

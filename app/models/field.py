@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, MetaData
+from sqlalchemy import Column, Integer, String, Float, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from geoalchemy2 import Geometry
 

@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     DB_PASS: str = 'postgres'
     DB_HOST: str = 'localhost'
     DB_PORT: int = 5432
-    DB_NAME: str = 'postgres'
+    DB_NAME: str = 'geometry'
     DB_DRIVER: str = 'postgresql+asyncpg'
 
     @property
