@@ -1,54 +1,41 @@
 import json
+import typing as t
+
 import geojson
 
-from fastapi import APIRouter, Query
-from geoalchemy2.functions import ST_AsGeoJSON
-from sqlalchemy import select, func
+from fastapi import APIRouter, Query, Depends
 
-from app.conf.db import async_session
-from app.models.field import Field
+from app.endpoints.dependecies.services import get_field_service, get_point
+from app.endpoints.services.field_service import FieldService
+
 
 router = APIRouter()
 
 
 @router.get("/fields/nearby/")
 async def get_nearby_fields(
-        lat: float = Query(..., description="Latitude of the point"),
-        lon: float = Query(..., description="Longitude of the point"),
         radius: float = Query(..., description="Radius in meters"),
+        crop: t.Optional[str] = None,
+        query_point: str = Depends(get_point),
+        field_service: FieldService = Depends(get_field_service),
 ):
-    async with async_session() as session:
-        query_point = f'POINT({lat} {lon})'  # 1.6669451 46.3516502
-        stmt = (
-            select(
-                Field.id,
-                Field.crop,
-                Field.productivity,
-                Field.area_ha,
-                Field.history,
-                Field.region,
-                Field.score,
-                ST_AsGeoJSON(Field.coordinates),
-            )
-            .where(func.ST_DWithin(Field.coordinates, func.ST_GeogFromText(query_point), radius))
-        )
-        nearby_fields = await session.execute(stmt)
-        nearby_fields = nearby_fields.fetchall()
+    nearby_fields = await field_service.get_nearby_fields(query_point, radius, crop)
+          # 1.6669451 46.3516502
 
-        features = []
-        for row in nearby_fields:
-            feature = geojson.Feature(
-                geometry=json.loads(row[7]),
-                properties={
-                    'id': row[0],
-                    'crop': row[1],
-                    'productivity': row[2],
-                    'area_ha': row[3],
-                    'history': row[4],
-                    'region': row[5],
-                    'score': row[6]
-                }
-            )
-            features.append(feature)
+    features = []
+    for row in nearby_fields:
+        feature = geojson.Feature(
+            geometry=json.loads(row[7]),
+            properties={
+                'id': row[0],
+                'crop': row[1],
+                'productivity': row[2],
+                'area_ha': row[3],
+                'history': row[4],
+                'region': row[5],
+                'score': row[6]
+            }
+        )
+        features.append(feature)
         feature_collection = geojson.FeatureCollection(features)
         return feature_collection
