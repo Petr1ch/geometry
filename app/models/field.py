@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, MetaData
+from sqlalchemy import Column, Integer, String, Float, MetaData, Text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from geoalchemy2 import Geometry
 
@@ -15,7 +16,7 @@ class Field(Base):
     crop = Column(String)
     productivity = Column(Float)
     area_ha = Column(Float)
-    history = Column(String)  # Ignoring this parameter for now
-    region = Column(String)  # ISO code of the region/district (ISO 3166-2)
-    score = Column(String)  # Ignoring this parameter for now
-    geometry = Column(Geometry('POLYGON'))
+    history = Column(JSONB(astext_type=Text()))  # Use JSONB with astext_type
+    region = Column(String)
+    score = Column(String)
+    coordinates = Column(Geometry('MULTIPOLYGON'))

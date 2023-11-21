@@ -1,17 +1,17 @@
 """Init table
 
-Revision ID: 0edb7e2836af
+Revision ID: dc074cab1b97
 Revises: 
-Create Date: 2023-11-21 18:18:10.292377
+Create Date: 2023-11-21 19:55:32.194985
 
 """
 import geoalchemy2
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '0edb7e2836af'
+revision = 'dc074cab1b97'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,10 +24,10 @@ def upgrade() -> None:
     sa.Column('crop', sa.String(), nullable=True),
     sa.Column('productivity', sa.Float(), nullable=True),
     sa.Column('area_ha', sa.Float(), nullable=True),
-    sa.Column('history', sa.String(), nullable=True),
+    sa.Column('history', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
     sa.Column('region', sa.String(), nullable=True),
     sa.Column('score', sa.String(), nullable=True),
-    sa.Column('geometry', geoalchemy2.types.Geometry(geometry_type='POLYGON', from_text='ST_GeomFromEWKT', name='geometry'), nullable=True),
+    sa.Column('coordinates', geoalchemy2.types.Geometry(geometry_type='MULTIPOLYGON', from_text='ST_GeomFromEWKT', name='geometry'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
