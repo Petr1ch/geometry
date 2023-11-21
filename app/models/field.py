@@ -16,7 +16,7 @@ class Field(Base):
     crop = Column(String)
     productivity = Column(Float)
     area_ha = Column(Float)
-    history = Column(JSONB(astext_type=Text()))  # Use JSONB with astext_type
+    history = Column(JSONB(astext_type=Text()))
     region = Column(String)
     score = Column(String)
     coordinates = Column(Geometry('MULTIPOLYGON'))
