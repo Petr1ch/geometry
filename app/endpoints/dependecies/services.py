@@ -5,5 +5,7 @@ from app.endpoints.dependecies.db import get_db_session
 from app.endpoints.services.field_service import FieldService
 
 
-async def get_field_service(session: AsyncSession = Depends(get_db_session)):
+async def get_field_service(
+    session: AsyncSession = Depends(get_db_session),
+) -> FieldService:
     return FieldService(session)

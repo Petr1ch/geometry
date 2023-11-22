@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     DB_DRIVER: str = "postgresql+asyncpg"
 
     @property
-    def sqlalchemy_database_uri(self):
+    def sqlalchemy_database_uri(self) -> str:
         return f"{self.DB_DRIVER}://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 

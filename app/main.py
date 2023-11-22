@@ -4,7 +4,7 @@ from app.conf.db import async_session, engine
 from app.endpoints import fields
 from app.models.field import metadata
 
-PREFIX: str = '/api'
+PREFIX: str = "/api"
 
 
 def init_db() -> None:
@@ -15,14 +15,14 @@ def init_db() -> None:
 
 def init_routes(app: FastAPI) -> None:
     """Connect routes to app"""
-    app.include_router(fields.router, prefix=PREFIX, tags=['Base'])
+    app.include_router(fields.router, prefix=PREFIX, tags=["Base"])
 
 
 def create_app() -> FastAPI:
     """Create app"""
     init_db()
     app = FastAPI(
-        title='Geometry Service',
+        title="Geometry Service",
     )
     init_routes(app)
     return app
