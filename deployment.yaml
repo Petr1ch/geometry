@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geometry-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        app: geometry
+    spec:
+      containers:
+        - name: geometry-db
+          image: geometry-db-image:latest
+          env:
+            - name: POSTGRES_HOST
+              value: "docker.for.mac.host.internal"
+          ports:
+            - containerPort: 5432
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-h", "localhost", "-U", "postgres", "-d", "geometry"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+        - name: geometry-app
+          image: geometry-app-image:latest
+          env:
+            - name: DB_HOST
+              value: "docker.for.mac.host.internal"
+          ports:
+            - containerPort: 8080
