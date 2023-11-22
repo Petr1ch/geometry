@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: geometry-db
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+    restart: always
+    environment:
+      - POSTGRES_HOST=docker.for.mac.host.internal
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U postgres -d geometry"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - geometry-net
+
+  api:
+    container_name: geometry-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: "no"
+    environment:
+      - DB_HOST=docker.for.mac.host.internal
+
+    ports:
+      - '8080:8080'
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint:
+      ./entrypoint.sh
+    networks:
+      - geometry-net
+
+networks:
+  geometry-net:
+    external: false
+    name: geometry-network

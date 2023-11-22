@@ -37,5 +37,5 @@ async def get_nearby_fields(
             }
         )
         features.append(feature)
-        feature_collection = geojson.FeatureCollection(features)
-        return feature_collection
+    feature_collection = geojson.FeatureCollection(features)
+    return feature_collection

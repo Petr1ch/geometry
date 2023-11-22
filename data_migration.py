@@ -9,9 +9,9 @@ async def main():
     async_session.configure(bind=engine)
     metadata.bind = engine
     async with async_session() as session:
-        with open('fr-subset.geojsons') as f:
+        with open('scripts/fr-subset.geojsons') as f:
             objects_to_add = []
-            for line in f:
+            for index, line in enumerate(f):
                 line = json.loads(line)
                 prop = line['properties']
 
@@ -26,7 +26,8 @@ async def main():
                     coordinates=json.dumps(line['geometry']),
                 )
                 objects_to_add.append(obj)
-
+                if index == 200:
+                    break
             session.add_all(objects_to_add)
             await session.commit()
 
