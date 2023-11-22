@@ -29,6 +29,6 @@ class FeatureCollection(BaseModel):
 
 
 class MetricsResponse(BaseModel):
-    total_area: float
-    total_yield: float
-    average_yield: float
+    total_area: t.Optional[float]
+    total_yield: t.Optional[float]
+    average_yield: t.Optional[float]
