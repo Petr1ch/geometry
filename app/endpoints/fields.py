@@ -32,9 +32,10 @@ async def get_nearby_fields(
 @router.post("/get_fields_in_parallelogram", response_model=FeatureCollection)
 async def get_fields_in_parallelogram(
     paralelogram: Polygon = Depends(get_polygon),
+    crop: t.Optional[str] = None,
     field_service: FieldService = Depends(get_field_service),
 ) -> geojson.FeatureCollection:
-    res = await field_service.get_fields_in_parallelogram(paralelogram)
+    res = await field_service.get_fields_in_parallelogram(paralelogram, crop)
     feature_collection = get_feature_collection(res)
     return feature_collection
 
@@ -42,9 +43,10 @@ async def get_fields_in_parallelogram(
 @router.post("/get_fields_intersect_geometry", response_model=FeatureCollection)
 async def get_fields_intersect_geometry(
     figure: Polygon = Depends(get_figure),
+    crop: t.Optional[str] = None,
     field_service: FieldService = Depends(get_field_service),
 ) -> geojson.FeatureCollection:
-    res = await field_service.get_fields_intersecting_geometry(figure)
+    res = await field_service.get_fields_intersecting_geometry(figure, crop)
     feature_collection = get_feature_collection(res)
     return feature_collection
 
